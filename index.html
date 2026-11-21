@@ -16,10 +16,10 @@ canvas{display:block;width:100%;height:100%}
 .icon-btn:active{transform:scale(.92)}
 .shop-fab{position:absolute;top:66px;left:16px;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.08);backdrop-filter:blur(4px);border:1.5px solid rgba(255,255,255,.32);display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;z-index:12;font-size:18px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 .shop-fab span{font-size:9px;color:#fbbf24;font-weight:bold;margin-top:1px}
-.overlay{position:absolute;inset:0;background:rgba(14,14,18,.95);backdrop-filter:blur(8px);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;z-index:25}
+.overlay{position:absolute;inset:0;background:rgba(14,14,18,.96);backdrop-filter:blur(8px);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:18px;z-index:25;overflow-y:auto}
 .hd{display:none!important}
-.logo{font-size:32px;font-weight:900;color:#facc15;margin-bottom:6px;letter-spacing:1px;text-shadow:0 4px 18px rgba(250,204,21,.3)}
-.sub{font-size:12px;color:#cbd5e1;margin-bottom:14px;text-align:center}
+.logo{font-size:30px;font-weight:900;color:#facc15;margin-bottom:6px;letter-spacing:1px;text-shadow:0 4px 18px rgba(250,204,21,.3)}
+.sub{font-size:12px;color:#cbd5e1;margin-bottom:12px;text-align:center}
 .card{width:100%;max-width:350px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:12px;margin-bottom:14px}
 .card-title{font-size:13px;font-weight:bold;color:#fbbf24;margin-bottom:8px;display:flex;justify-content:space-between}
 .lb-list{max-height:185px;overflow-y:auto}
@@ -29,16 +29,23 @@ canvas{display:block;width:100%;height:100%}
 .av{width:28px;height:28px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-weight:900;font-size:12px;color:#fff;flex-shrink:0;overflow:hidden;border:1px solid rgba(255,255,255,.3)}
 .av img{width:100%;height:100%;object-fit:cover}
 .lb-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold}
-.btn{width:100%;max-width:350px;padding:14px;border:none;border-radius:14px;font-size:16px;font-weight:900;cursor:pointer;margin-bottom:10px;transition:transform .1s}
+.btn{width:100%;max-width:350px;padding:13px;border:none;border-radius:14px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:9px;transition:transform .1s}
 .btn:active{transform:scale(.97)}
 .btn-play{background:linear-gradient(135deg,#facc15,#f59e0b);color:#111;box-shadow:0 4px 16px rgba(245,158,11,.35)}
+.btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;box-shadow:0 4px 16px rgba(34,197,94,.35);font-size:20px;padding:11px}
 .btn-share{background:rgba(255,255,255,.1);color:#fff;font-size:13px;border:1px solid rgba(255,255,255,.12)}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:350px;margin-bottom:12px}
 .stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px;text-align:center}
-.skins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:350px;margin-bottom:14px}
-.skin-item{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:10px 6px;text-align:center;cursor:pointer}
-.skin-item.active{border-color:#facc15;background:rgba(250,204,21,.16)}
-.skin-item.locked{opacity:.65}
+.shop-wrap{width:100%;max-width:360px;direction:ltr}
+.bonus-hdr{text-align:center;font-size:17px;font-weight:900;color:#fff;letter-spacing:.5px;margin-bottom:10px;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.tier-bar{width:100%;padding:5px 0;border-radius:20px;text-align:center;font-weight:900;font-size:13px;color:#fff;margin-bottom:10px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.sk-card{display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:transform .12s}
+.sk-card:active{transform:scale(.93)}
+.sk-card canvas{width:66px;height:66px;display:block}
+.sk-cost{font-size:11px;font-weight:bold;margin-top:3px;color:#cbd5e1}
+.sk-cost.act{color:#facc15}
+.sk-cost.unlk{color:#4ade80}
 .brand-tag{margin-top:6px;padding:6px 14px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:11px;color:#94a3b8;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
 .brand-tag b{color:#facc15;font-family:sans-serif;direction:ltr}
 #toast{position:absolute;top:64px;left:50%;transform:translateX(-50%);background:#fff;color:#111;padding:8px 16px;border-radius:12px;font-size:12px;font-weight:bold;z-index:50;opacity:0;transition:.2s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.4)}
@@ -67,15 +74,26 @@ canvas{display:block;width:100%;height:100%}
 <div class="lb-list" id="lb-start">در حال دریافت...</div>
 </div>
 <button class="btn btn-play" onclick="startGame()">شروع بازی</button>
-<button class="btn btn-share" onclick="openShop()">🛒 فروشگاه طرح چاقوها (⭐ <span id="menu-stars">0</span>)</button>
+<button class="btn btn-share" onclick="openShop()">🛒 فروشگاه خنجرها (⭐ <span id="menu-stars">0</span>)</button>
 <div class="brand-tag" onclick="openChannel()">🎮 اختصاصی کانال <b>@gamee_balee</b></div>
 </div>
 
 <div class="overlay hd" id="shop-screen">
-<div class="logo" style="font-size:24px">🛒 فروشگاه طرح‌ها</div>
-<div class="sub">موجودی ستاره شما: <b style="color:#facc15" id="shop-stars">0</b> ⭐</div>
-<div class="skins-grid" id="skins-grid"></div>
-<button class="btn btn-play" onclick="closeShop()">بازگشت</button>
+<div class="shop-wrap">
+<div class="bonus-hdr" id="shop-bonus-hdr">Basic BONUS +10%</div>
+<div style="text-align:center;font-size:12px;color:#fbbf24;margin-bottom:10px;direction:rtl">موجودی ستاره: <b id="shop-stars">0</b> ⭐</div>
+
+<div class="tier-bar" style="background:#9ca3af">Basic (+10% BONUS)</div>
+<div class="tier-grid" id="tier-0"></div>
+
+<div class="tier-bar" style="background:#38bdf8">Rare (+20% BONUS)</div>
+<div class="tier-grid" id="tier-1"></div>
+
+<div class="tier-bar" style="background:#f43f5e">Legendary (+35% BONUS)</div>
+<div class="tier-grid" id="tier-2"></div>
+
+<button class="btn btn-green" onclick="closeShop()">▶️</button>
+</div>
 </div>
 
 <div class="overlay hd" id="pause-screen">
@@ -129,17 +147,25 @@ return p.photo?`<div class="av" style="background:${bg}"><img src="${p.photo}" o
 
 let best=parseInt(localStorage.getItem("ch_best")||"0",10);
 let stars=parseInt(localStorage.getItem("ch_stars")||"0",10);
-let owned=JSON.parse(localStorage.getItem("ch_owned")||"[0]");
-let curSkin=parseInt(localStorage.getItem("ch_skin")||"0",10);
+let owned=JSON.parse(localStorage.getItem("ch_owned_v2")||"[0]");
+let curSkin=parseInt(localStorage.getItem("ch_skin_v2")||"0",10);
+if(curSkin<0||curSkin>11)curSkin=0;
 let lb=[];
 
+// ۱۲ مدل خنجر و سوزن دقیقاً مطابق دسته‌بندی GAMEE (Basic, Rare, Legendary)
 const SKINS=[
-{name:"کلاسیک",cost:0,ico:"📍"},
-{name:"خنجر",cost:10,ico:"🗡️"},
-{name:"شهاب",cost:25,ico:"☄️"},
-{name:"الماس",cost:45,ico:"💎"},
-{name:"لیزر",cost:70,ico:"⚡"},
-{name:"سلطنتی",cost:100,ico:"👑"}
+{id:0,tier:0,tName:"Basic",bonus:10,cost:0},
+{id:1,tier:0,tName:"Basic",bonus:10,cost:5},
+{id:2,tier:0,tName:"Basic",bonus:10,cost:10},
+{id:3,tier:0,tName:"Basic",bonus:10,cost:15},
+{id:4,tier:1,tName:"Rare",bonus:20,cost:25},
+{id:5,tier:1,tName:"Rare",bonus:20,cost:35},
+{id:6,tier:1,tName:"Rare",bonus:20,cost:45},
+{id:7,tier:1,tName:"Rare",bonus:20,cost:60},
+{id:8,tier:2,tName:"Legendary",bonus:35,cost:80},
+{id:9,tier:2,tName:"Legendary",bonus:35,cost:100},
+{id:10,tier:2,tName:"Legendary",bonus:35,cost:125},
+{id:11,tier:2,tName:"Legendary",bonus:35,cost:150}
 ];
 
 function updStars(){
@@ -153,26 +179,152 @@ updStars();
 document.getElementById("hud-best").innerText=best;
 function toast(m){const t=document.getElementById("toast");t.innerText=m;t.style.opacity="1";setTimeout(()=>t.style.opacity="0",2000)}
 
+// رسم شکل دقیق هر کدام از ۱۲ مدل خنجر (هم در فروشگاه و هم در گیم‌پلی)
+function renderSkinShape(c,id,col,isLocked){
+const g=c.createLinearGradient(-5,0,5,0);
+if(isLocked){
+g.addColorStop(0,"#09090b");g.addColorStop(1,"#18181b");
+}else{
+g.addColorStop(0,"#94a3b8");g.addColorStop(0.45,"#ffffff");g.addColorStop(1,"#475569");
+}
+c.fillStyle=g;
+
+if(id===0){
+// سوزن کلاسیک صاف
+c.beginPath();c.moveTo(0,-55);c.lineTo(4.6,-6);c.lineTo(-4.6,-6);c.closePath();c.fill();
+}else if(id===1){
+// سوزن باریک با حلقه میانی
+c.beginPath();c.moveTo(0,-56);c.lineTo(3.5,-6);c.lineTo(-3.5,-6);c.closePath();c.fill();
+c.beginPath();c.arc(0,-24,4.8,0,6.28);c.fill();
+}else if(id===2){
+// خنجر دو لبه الماسی
+c.beginPath();c.moveTo(0,-56);c.lineTo(6.5,-24);c.lineTo(3,-6);c.lineTo(-3,-6);c.lineTo(-6.5,-24);c.closePath();c.fill();
+}else if(id===3){
+// خنجر پهن و کوتاه
+c.beginPath();c.moveTo(0,-54);c.lineTo(6.5,-34);c.lineTo(4,-6);c.lineTo(-4,-6);c.lineTo(-6.5,-34);c.closePath();c.fill();
+}else if(id===4){
+// اره زیگزاگی (Rare 1)
+c.beginPath();c.moveTo(0,-57);
+for(let y=-50;y<=-12;y+=7){c.lineTo(5.5,y);c.lineTo(2,y+3.5)}
+c.lineTo(3,-6);c.lineTo(-3,-6);
+for(let y=-12;y>=-50;y-=7){c.lineTo(-2,y+3.5);c.lineTo(-5.5,y)}
+c.closePath();c.fill();
+}else if(id===5){
+// نیزه موج‌دار (Rare 2)
+c.beginPath();c.moveTo(0,-57);c.lineTo(6,-40);c.lineTo(2.5,-26);c.lineTo(5.5,-15);c.lineTo(3,-6);
+c.lineTo(-3,-6);c.lineTo(-5.5,-15);c.lineTo(-2.5,-26);c.lineTo(-6,-40);c.closePath();c.fill();
+}else if(id===6){
+// شمشیر گارددار (Rare 3)
+c.beginPath();c.moveTo(0,-57);c.lineTo(4.5,-22);c.lineTo(7.5,-17);c.lineTo(3,-13);c.lineTo(3,-6);
+c.lineTo(-3,-6);c.lineTo(-3,-13);c.lineTo(-7.5,-17);c.lineTo(-4.5,-22);c.closePath();c.fill();
+}else if(id===7){
+// خنجر حفره‌دار (Rare 4)
+c.beginPath();c.moveTo(0,-57);c.lineTo(6,-35);c.lineTo(3.5,-6);c.lineTo(-3.5,-6);c.lineTo(-6,-35);c.closePath();c.fill();
+c.fillStyle=isLocked?"#27272a":"#18181b";c.fillRect(-2.5,-28,5,4);c.fillRect(-2.5,-20,5,4);
+}else if(id===8){
+// نیزه اژدها (Legendary 1)
+c.beginPath();c.moveTo(0,-58);c.lineTo(7,-44);c.lineTo(3,-38);c.lineTo(6.5,-28);c.lineTo(2.5,-20);c.lineTo(3.5,-6);
+c.lineTo(-3.5,-6);c.lineTo(-2.5,-20);c.lineTo(-6.5,-28);c.lineTo(-3,-38);c.lineTo(-7,-44);c.closePath();c.fill();
+}else if(id===9){
+// خنجر سلطنتی سه‌بند (Legendary 2)
+c.beginPath();c.moveTo(0,-58);c.lineTo(5.5,-42);c.lineTo(3,-6);c.lineTo(-3,-6);c.lineTo(-5.5,-42);c.closePath();c.fill();
+c.beginPath();c.arc(0,-34,4.8,0,6.28);c.arc(0,-24,4.8,0,6.28);c.arc(0,-14,4.8,0,6.28);c.fill();
+}else if(id===10){
+// خنجر مهره‌ای (Legendary 3)
+c.beginPath();c.moveTo(0,-58);c.lineTo(4,-6);c.lineTo(-4,-6);c.closePath();c.fill();
+for(let y=-44;y<=-12;y+=8){c.beginPath();c.ellipse(0,y,6,3.2,0,0,6.28);c.fill()}
+}else if(id===11){
+// خنجر مارپیچ S شکل (Legendary 4)
+c.beginPath();c.moveTo(0,-58);
+c.quadraticCurveTo(9,-44,0,-32);
+c.quadraticCurveTo(-9,-20,3,-6);
+c.lineTo(-3,-6);
+c.quadraticCurveTo(-13,-20,-4,-32);
+c.quadraticCurveTo(5,-44,0,-58);
+c.closePath();c.fill();
+}
+
+// دسته انتهایی
+c.fillStyle=isLocked?"#09090b":"#18181b";
+c.beginPath();c.arc(0,0,9,0,6.28);c.fill();
+c.fillStyle=isLocked?"#18181b":col;
+c.beginPath();c.arc(0,0,6.2,0,6.28);c.fill();
+if(!isLocked){
+c.fillStyle="rgba(255,255,255,0.45)";
+c.beginPath();c.arc(-1.8,-1.8,2,0,6.28);c.fill();
+}
+}
+
 function openShop(){renderShop();document.getElementById("shop-screen").classList.remove("hd")}
 function closeShop(){document.getElementById("shop-screen").classList.add("hd")}
+
 function renderShop(){
 updStars();
-document.getElementById("skins-grid").innerHTML=SKINS.map((sk,i)=>{
-const ok=owned.includes(i),act=curSkin===i;
-return `<div class="skin-item ${act?'active':''} ${!ok?'locked':''}" onclick="pickSkin(${i})">
-<div style="font-size:26px;margin-bottom:4px">${sk.ico}</div>
-<div style="font-size:12px;font-weight:bold;margin-bottom:4px">${sk.name}</div>
-<div style="font-size:11px;color:${act?'#4ade80':ok?'#cbd5e1':'#facc15'}">${act?'فعال ✅':ok?'انتخاب':sk.cost+' ⭐'}</div>
+const actSk=SKINS[curSkin];
+document.getElementById("shop-bonus-hdr").innerText=`${actSk.tName} BONUS +${actSk.bonus}%`;
+
+for(let t=0;t<3;t++){
+const box=document.getElementById("tier-"+t);
+const items=SKINS.filter(s=>s.tier===t);
+box.innerHTML=items.map(sk=>{
+const ok=owned.includes(sk.id),act=curSkin===sk.id;
+const lbl=act?"فعال ✅":ok?"انتخاب":`${sk.cost} ⭐`;
+const cls=act?"act":ok?"unlk":"";
+return `<div class="sk-card" onclick="pickSkin(${sk.id})">
+<canvas id="skcv-${sk.id}" width="132" height="132"></canvas>
+<div class="sk-cost ${cls}">${lbl}</div>
 </div>`;
 }).join("");
 }
+
+// رسم مدال‌های دایره‌ای پرتودار دقیقاً مثل تصویر فروشگاه GAMEE
+SKINS.forEach(sk=>{
+const cEl=document.getElementById("skcv-"+sk.id);
+if(!cEl)return;
+const c=cEl.getContext("2d");
+const ok=owned.includes(sk.id),act=curSkin===sk.id;
+c.clearRect(0,0,132,132);
+
+// پس‌زمینه دایره‌ای تیره با پرتوهای خورشیدی
+c.save();
+c.beginPath();c.arc(66,66,54,0,6.28);c.clip();
+c.fillStyle="#222328";c.fillRect(0,0,132,132);
+c.fillStyle="rgba(255,255,255,0.045)";
+for(let i=0;i<12;i++){
+const a0=i*(Math.PI/6),a1=a0+Math.PI/12;
+c.beginPath();c.moveTo(66,66);c.arc(66,66,60,a0,a1);c.closePath();c.fill();
+}
+c.restore();
+
+// حاشیه رنگی دور دایره (طلایی برای انتخاب‌شده، و رنگ رده برای بقیه)
+const ringCol=act?"#facc15":sk.tier===0?"#9ca3af":sk.tier===1?"#38bdf8":"#f43f5e";
+c.strokeStyle=ringCol;c.lineWidth=act?7:6;
+c.beginPath();c.arc(66,66,54,0,6.28);c.stroke();
+
+// رسم خنجر مورب داخل دایره
+c.save();
+c.translate(54,84);
+c.rotate(0.46);
+c.scale(1.18,1.18);
+renderSkinShape(c,sk.id,"#38bdf8",!ok);
+c.restore();
+});
+}
+
 function pickSkin(i){
-if(owned.includes(i)){curSkin=i;localStorage.setItem("ch_skin",i);beep(620,.08);renderShop();toast("طرح "+SKINS[i].name+" فعال شد!")}
-else if(stars>=SKINS[i].cost){
+if(owned.includes(i)){
+curSkin=i;localStorage.setItem("ch_skin_v2",i);
+beep(620,.08);renderShop();
+toast(`طرح انتخاب شد! (+${SKINS[i].bonus}% امتیاز بیشتر)`);
+}else if(stars>=SKINS[i].cost){
 stars-=SKINS[i].cost;owned.push(i);curSkin=i;
-localStorage.setItem("ch_owned",JSON.stringify(owned));localStorage.setItem("ch_skin",i);
-beep(800,.15);renderShop();toast("طرح "+SKINS[i].name+" خریداری شد!");
-}else toast("ستاره کافی نداری! ⭐");
+localStorage.setItem("ch_owned_v2",JSON.stringify(owned));
+localStorage.setItem("ch_skin_v2",i);
+beep(800,.15);renderShop();
+toast(`خریداری شد! (+${SKINS[i].bonus}% امتیاز بیشتر)`);
+}else{
+toast(`به ${SKINS[i].cost} ستاره نیاز داری! ⭐`);
+}
 }
 
 async function syncLB(sc){
@@ -191,7 +343,6 @@ const h=lb.length?lb.slice(0,10).map((p,idx)=>`<div class="lb-row ${p.id===usr.i
 document.getElementById("lb-start").innerHTML=h;document.getElementById("lb-over").innerHTML=h;
 }
 
-// موتور صوتی + قطع خودکار موزیک هنگام مینی‌مایز (پنجره کردن) یا خروج از مینی‌اپ
 let snd=true,ac=null,bgmInt=null,beatStep=0;
 function initAudio(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume()}
 function beep(f,d,t="sine",v=0.14){
@@ -227,7 +378,6 @@ snd=!snd;document.getElementById("btn-snd").innerText=snd?"🔊":"🔇";
 if(snd&&st==="play"&&!document.hidden)startBGM();else stopBGM();
 }
 
-// مدیریت قطع و وصل خودکار صدا هنگام پنجره کردن یا خروج از صفحه
 function handleVisibility(){
 if(document.hidden){
 stopBGM();
@@ -343,31 +493,15 @@ ctx.beginPath();ctx.roundRect(0,-44,4.5,44,[0,4.5,4.5,0]);ctx.fill();
 ctx.restore();
 return;
 }
-const g=ctx.createLinearGradient(-4.5,0,4.5,0);
-g.addColorStop(0,"#94a3b8");g.addColorStop(0.45,"#ffffff");g.addColorStop(1,"#475569");
-ctx.fillStyle=g;
-if(curSkin===1){
-ctx.beginPath();ctx.moveTo(0,-58);ctx.lineTo(6,-14);ctx.lineTo(3,-6);ctx.lineTo(-3,-6);ctx.lineTo(-6,-14);ctx.closePath();ctx.fill();
-}else if(curSkin===3){
-ctx.fillStyle="#e0f2fe";ctx.beginPath();ctx.moveTo(0,-58);ctx.lineTo(6,-32);ctx.lineTo(3.5,-6);ctx.lineTo(-3.5,-6);ctx.lineTo(-6,-32);ctx.closePath();ctx.fill();
-}else{
-ctx.beginPath();ctx.moveTo(0,-55);ctx.lineTo(4.6,-6);ctx.lineTo(-4.6,-6);ctx.closePath();ctx.fill();
-}
-ctx.fillStyle="#18181b";ctx.beginPath();ctx.arc(0,0,9,0,6.28);ctx.fill();
-ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,0,6.2,0,6.28);ctx.fill();
-ctx.fillStyle="rgba(255,255,255,0.45)";ctx.beginPath();ctx.arc(-1.8,-1.8,2,0,6.28);ctx.fill();
-if(curSkin===2||curSkin===4){ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-54);ctx.lineTo(0,-9);ctx.stroke()}
-if(curSkin===5){ctx.fillStyle="#fde047";ctx.fillRect(-6,-9,12,3.5)}
+renderSkinShape(ctx,curSkin,col,false);
 ctx.restore();
 }
 
-// رسم آیکون خنجر رنگی در نوار پایین سمت چپ
 function drawQueueDagger(x,y,col,isNext){
 ctx.save();ctx.translate(x,y);ctx.rotate(-0.68);
 if(isNext){
 ctx.shadowColor=col;ctx.shadowBlur=8;
 }
-// تیغه خنجر
 ctx.fillStyle=isNext?"#ffffff":"#cbd5e1";
 ctx.beginPath();
 ctx.moveTo(15,0);
@@ -375,12 +509,10 @@ ctx.lineTo(2,-3.4);
 ctx.lineTo(2,3.4);
 ctx.closePath();
 ctx.fill();
-// گارد (محافظ) خنجر
 ctx.fillStyle=col;
 ctx.beginPath();
 ctx.roundRect(0,-5.5,2.6,11,1.2);
 ctx.fill();
-// دسته خنجر
 ctx.fillStyle=col;
 ctx.beginPath();
 ctx.roundRect(-10,-2.6,10,5.2,2);
@@ -498,7 +630,9 @@ fly=null;triggerFail();
 }else{
 stuck.push({a:hitAng,c:fly.c,pre:false});
 queue.shift();readyY=H-48;
-bounce=11;hitGlow=0.45;let pts=11;
+bounce=11;hitGlow=0.45;
+const mult=1+(SKINS[curSkin].bonus/100);
+let pts=Math.round(10*mult);
 boom(CX,CY+R,fly.c,14);
 beep(650+(score%10)*35,.065);
 
@@ -506,10 +640,10 @@ pickups.forEach(p=>{
 if(!p.hit&&angDiff(p.a,hitAng)<0.27){
 p.hit=true;
 if(p.type==="star"){
-stars++;updStars();pts=21;boom(CX,CY+R+18,"#facc15",18);beep(980,.12);
+stars++;updStars();pts=Math.round(20*mult);boom(CX,CY+R+18,"#facc15",18);beep(980,.12);
 }else if(p.type==="aim"){
 aimUntil=Date.now()+7000;
-pts=21;boom(CX,CY+R+18,"#ffffff",18);beep(1050,.15);
+pts=Math.round(20*mult);boom(CX,CY+R+18,"#ffffff",18);beep(1050,.15);
 toast("🎯 نشانه‌گیر ۷ ثانیه‌ای فعال شد!");
 }
 }
@@ -518,7 +652,7 @@ toast("🎯 نشانه‌گیر ۷ ثانیه‌ای فعال شد!");
 score+=pts;
 document.getElementById("hud-score").innerText=score;
 if(score>best)document.getElementById("hud-best").innerText=score;
-addFloat(CX+(Math.random()*28-14),CY+R+28,"+"+pts,pts>11?"#facc15":"#fff");
+addFloat(CX+(Math.random()*28-14),CY+R+28,"+"+pts,pts>14?"#facc15":"#fff");
 
 fly=null;
 if(queue.length===0){
@@ -612,7 +746,6 @@ drawNeedle(CX,fly.y,0,fly.c,1,false);
 }else if(queue.length>0)drawNeedle(CX,readyY,0,queue[0],1,false);
 }
 
-// رسم خنجرهای رنگی در گوشه پایین چپ طوری که از بالا به پایین کم شوند
 for(let i=0;i<queue.length;i++){
 const posFromBottom=queue.length-1-i;
 drawQueueDagger(28,H-38-posFromBottom*17,queue[i],i===0);
