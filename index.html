@@ -69,14 +69,6 @@ canvas{display:block;width:100%;height:100%}
 <div class="brand-tag" onclick="openChannel()">🎮 اختصاصی کانال <b>@gamee_balee</b></div>
 </div>
 
-<div class="overlay hd" id="wheel-screen" style="background:rgba(16,16,20,.88)">
-<div class="logo" style="font-size:24px;color:#38bdf8">🎡 گردونه شانس!</div>
-<div class="sub">یک بار بچرخان تا جان اضافه یا ستاره جایزه بگیری</div>
-<canvas id="wcv" width="260" height="260" style="width:260px;height:260px;margin:8px 0 14px"></canvas>
-<button class="btn btn-play" id="btn-spin" onclick="spinWheel()">🎲 چرخاندن گردونه</button>
-<button class="btn btn-share" onclick="skipWheel()">رد کردن ⏭</button>
-</div>
-
 <div class="overlay hd" id="shop-screen">
 <div class="logo" style="font-size:24px">🛒 فروشگاه طرح‌ها</div>
 <div class="sub">موجودی ستاره شما: <b style="color:#facc15" id="shop-stars">0</b> ⭐</div>
@@ -197,7 +189,6 @@ const h=lb.length?lb.slice(0,10).map((p,idx)=>`<div class="lb-row ${p.id===usr.i
 document.getElementById("lb-start").innerHTML=h;document.getElementById("lb-over").innerHTML=h;
 }
 
-// موتور صوتی + موزیک پس‌زمینه ریتمیک (شبیه نسخه GAMEE)
 let snd=true,ac=null,bgmInt=null,beatStep=0;
 function initAudio(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume()}
 function beep(f,d,t="sine",v=0.14){
@@ -241,11 +232,10 @@ cv.width=W;cv.height=H;CX=W/2;CY=H*0.39;R=Math.min(W,H)*0.22;
 }
 window.addEventListener("resize",resize);resize();
 
-// رنگ‌های دقیق مثل ویدیو: زرد، آبی، قرمز، سبز
 const PAL=["#facc15","#0ea5e9","#ef4444","#22c55e"];
-let st="menu",score=0,lvl=1,rot=0,curSpd=0.03,targetSpd=0.03,rotTmr=0;
+let st="menu",score=0,lvl=1,rot=0,rotSpd=0.03;
 let segs=[],stuck=[],pickups=[],queue=[],fly=null,ricochet=null,brokenKnives=[];
-let readyY=0,bounce=0,shake=0,parts=[],floats=[],waveT=0,flash=0,usedWheel=false,holding=false;
+let readyY=0,bounce=0,shake=0,parts=[],floats=[],waveT=0,flash=0,holding=false;
 
 function norm(a){while(a<0)a+=Math.PI*2;while(a>=Math.PI*2)a-=Math.PI*2;return a}
 function angDiff(a,b){let d=Math.abs(norm(a)-norm(b));return d>Math.PI?Math.PI*2-d:d}
@@ -261,7 +251,6 @@ const totalKnives=Math.min(10,5+Math.floor(lvl*0.7));
 queue=[];
 for(let i=0;i<totalKnives;i++)queue.push(segs[Math.floor(Math.random()*segs.length)]);
 
-// در مراحل باس یا بالاتر، چاقوهای از قبل کاشته‌شده روی دایره می‌گذاریم
 if(lvl>=3){
 const preCount=isBoss?3:2;
 for(let i=0;i<preCount;i++){
@@ -271,11 +260,8 @@ stuck.push({a,c:segs[segIdx]});
 }
 }
 
-const baseSpd=0.028+Math.min(0.03,lvl*0.0022);
-targetSpd=baseSpd*(Math.random()>0.5?1:-1);
-curSpd=targetSpd;rotTmr=0;
+rotSpd=0.028+Math.min(0.026,lvl*0.0022);
 
-// قرار دادن ستاره‌ها و توپک‌های رنگی شناور دور دایره (بدون تداخل با چاقوهای کاشته‌شده)
 const itemCount=isBoss?3:2;
 for(let i=0;i<itemCount;i++){
 const a=(Math.PI*2/itemCount)*i+0.9;
@@ -296,8 +282,7 @@ function startGame(){
 document.getElementById("start-screen").classList.add("hd");
 document.getElementById("over-screen").classList.add("hd");
 document.getElementById("pause-screen").classList.add("hd");
-document.getElementById("wheel-screen").classList.add("hd");
-score=0;lvl=1;parts=[];floats=[];brokenKnives=[];usedWheel=false;flash=0.4;
+score=0;lvl=1;parts=[];floats=[];brokenKnives=[];flash=0.4;
 document.getElementById("hud-score").innerText="0";
 setupLevel();st="play";initAudio();beep(560,.1);startBGM();
 }
@@ -320,67 +305,10 @@ wrap.addEventListener("pointerup",()=>holding=false);
 wrap.addEventListener("pointercancel",()=>holding=false);
 
 function triggerFail(){
-st="dying";shake=15;beep(130,.35,"sawtooth");
-setTimeout(()=>{
-if(!usedWheel&&score>=11){
-usedWheel=true;openWheel();
-}else finishGameOver();
-},520);
-}
-
-function finishGameOver(){
-st="over";stopBGM();
+st="over";stopBGM();shake=15;beep(130,.35,"sawtooth");
 if(score>best){best=score;localStorage.setItem("ch_best",best)}
 document.getElementById("end-score").innerText=score;document.getElementById("end-best").innerText=best;
-document.getElementById("over-screen").classList.remove("hd");syncLB(score);
-}
-
-// گردونه شانس بعد از باخت (مثل ویدیو)
-let wAng=0,wSpinning=false;
-function openWheel(){
-document.getElementById("wheel-screen").classList.remove("hd");
-document.getElementById("btn-spin").disabled=false;
-drawWheel();
-}
-function skipWheel(){document.getElementById("wheel-screen").classList.add("hd");finishGameOver()}
-function drawWheel(){
-const wc=document.getElementById("wcv"),wctx=wc.getContext("2d");
-wctx.clearRect(0,0,260,260);
-const cols=["#22c55e","#0ea5e9","#facc15","#ef4444"];
-const labs=["❤️ جان اضافه","⭐ +5 ستاره","🎁 +10 ستاره","⭐ +3 ستاره"];
-for(let i=0;i<4;i++){
-const a0=wAng+i*Math.PI/2,a1=a0+Math.PI/2;
-wctx.fillStyle=cols[i];wctx.beginPath();wctx.moveTo(130,130);wctx.arc(130,130,115,a0,a1);wctx.closePath();wctx.fill();
-wctx.strokeStyle="#fff";wctx.lineWidth=3;wctx.stroke();
-wctx.save();wctx.translate(130,130);wctx.rotate(a0+Math.PI/4);
-wctx.fillStyle="#111";wctx.font="bold 13px Tahoma";wctx.textAlign="center";
-wctx.fillText(labs[i],66,5);wctx.restore();
-}
-wctx.fillStyle="#1c1c1e";wctx.beginPath();wctx.arc(130,130,22,0,6.28);wctx.fill();
-wctx.fillStyle="#fff";wctx.beginPath();wctx.moveTo(130,24);wctx.lineTo(120,4);wctx.lineTo(140,4);wctx.closePath();wctx.fill();
-}
-function spinWheel(){
-if(wSpinning)return;wSpinning=true;document.getElementById("btn-spin").disabled=true;
-let spd=0.38+Math.random()*0.15;
-const iv=setInterval(()=>{
-wAng=norm(wAng+spd);spd*=0.965;drawWheel();
-if(spd<0.004){
-clearInterval(iv);wSpinning=false;
-const topA=norm(-Math.PI/2-wAng);
-const idx=Math.floor(topA/(Math.PI/2))%4;
-setTimeout(()=>{
-document.getElementById("wheel-screen").classList.add("hd");
-if(idx===0){
-toast("❤️ جان اضافه گرفتی! ادامه بده!");beep(880,.18);
-ricochet=null;st="play";
-}else{
-const bonus=idx===1?5:idx===2?10:3;
-stars+=bonus;updStars();toast(`⭐ ${bonus} ستاره جایزه گرفتی!`);beep(880,.18);
-finishGameOver();
-}
-},450);
-}
-},16);
+setTimeout(()=>{document.getElementById("over-screen").classList.remove("hd");syncLB(score)},520);
 }
 
 function drawNeedle(x,y,ang,col,scale=1){
@@ -413,7 +341,6 @@ function drawBossFace(x,y,r){
 ctx.save();ctx.translate(x,y);
 ctx.fillStyle="#a855f7";ctx.beginPath();ctx.arc(0,0,r,0,6.28);ctx.fill();
 ctx.strokeStyle="#581c87";ctx.lineWidth=3;ctx.stroke();
-// چشم‌ها و دهان باس مرحله (مثل ویدیو)
 ctx.fillStyle="#3b0764";
 ctx.beginPath();ctx.moveTo(-r*0.55,-r*0.1);ctx.lineTo(-r*0.15,-r*0.32);ctx.lineTo(-r*0.2,0);ctx.closePath();ctx.fill();
 ctx.beginPath();ctx.moveTo(r*0.55,-r*0.1);ctx.lineTo(r*0.15,-r*0.32);ctx.lineTo(r*0.2,0);ctx.closePath();ctx.fill();
@@ -427,7 +354,6 @@ if(flash>0)flash=Math.max(0,flash-0.05);
 readyY+=(H-95-readyY)*0.35;
 ctx.clearRect(0,0,W,H);
 
-// پس‌زمینه موج‌دار تاریک
 ctx.fillStyle="#1c1c1e";ctx.fillRect(0,0,W,H);
 ctx.strokeStyle="rgba(255,255,255,0.032)";ctx.lineWidth=26;
 for(let i=-2;i<6;i++){
@@ -440,17 +366,7 @@ ctx.save();
 if(shake>0.5)ctx.translate((Math.random()-0.5)*shake,(Math.random()-0.5)*shake);
 
 if(st==="play"){
-rotTmr++;
-const baseSpd=0.028+Math.min(0.03,lvl*0.0022);
-if(lvl>=2&&rotTmr>90){
-rotTmr=0;
-const rMode=Math.random();
-if(rMode<0.42)targetSpd*=-1;
-else if(rMode<0.75)targetSpd=(targetSpd>0?1:-1)*baseSpd*1.45;
-else targetSpd=(targetSpd>0?1:-1)*baseSpd*0.45;
-}
-curSpd+=(targetSpd-curSpd)*0.08;
-rot=norm(rot+curSpd);
+rot=norm(rot+rotSpd);
 
 if(fly){
 fly.y-=46;
@@ -487,7 +403,6 @@ addFloat(CX+(Math.random()*30-15),CY+R+28,"+"+pts,pts>11?"#facc15":"#fff");
 
 fly=null;
 if(queue.length===0){
-// انفجار دایره و پرتاب چاقوهای کاشته‌شده به اطراف (دقیقاً مثل ویدیو)
 segs.forEach(c=>boom(CX,CY,c,16,7));
 stuck.forEach(k=>{
 const wa=k.a+rot;
@@ -501,7 +416,6 @@ setTimeout(()=>{if(st==="play")setupLevel()},260);
 }
 }
 
-// چاقوهای پرتاب‌شده هنگام شکستن دایره
 brokenKnives.forEach((bk,i)=>{
 bk.x+=bk.vx;bk.y+=bk.vy;bk.vy+=0.35;bk.rot+=bk.vr;bk.l-=0.025;
 ctx.globalAlpha=Math.max(0,bk.l);
@@ -518,13 +432,11 @@ drawNeedle(ricochet.x,ricochet.y,ricochet.rot,ricochet.c,1);
 const curY=CY-bounce;
 const isBoss=(lvl%3===0);
 
-// چاقوهای فرورفته
 stuck.forEach(k=>{
 const worldA=k.a+rot;
 drawNeedle(CX+Math.cos(worldA)*(R+34),curY+Math.sin(worldA)*(R+34),worldA-Math.PI/2,k.c,0.92);
 });
 
-// ستاره‌ها و توپک‌های شناور دور دایره
 pickups.forEach(p=>{
 if(!p.hit){
 const worldA=p.a+rot;
@@ -538,7 +450,6 @@ ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(px,py,4.5,0,6.28);ctx.fill();
 }
 });
 
-// رسم دایره اصلی (حلقه چندرنگ در مراحل باس، دایره کامل در مراحل عادی)
 const segSize=(Math.PI*2)/segs.length;
 for(let i=0;i<segs.length;i++){
 ctx.fillStyle=segs[i];
@@ -551,10 +462,8 @@ shd.addColorStop(0,"rgba(255,255,255,0.2)");
 shd.addColorStop(1,"rgba(0,0,0,0.2)");
 ctx.fillStyle=shd;ctx.beginPath();ctx.arc(CX,curY,R,0,6.28);ctx.fill();
 
-// صورت باس مرحله در مرکز حلقه (مثل ویدیو)
 if(isBoss)drawBossFace(CX,curY,R*0.58);
 
-// خط نقطه‌چین نشانه‌گیری هنگام نگه داشتن انگشت یا در مراحل باس
 if(st==="play"&&!fly&&queue.length>0&&(holding||isBoss)){
 ctx.fillStyle="rgba(255,255,255,0.55)";
 for(let y=readyY-68;y>curY+R+12;y-=18){
@@ -562,13 +471,11 @@ ctx.beginPath();ctx.arc(CX,y,3,0,6.28);ctx.fill();
 }
 }
 
-// چاقوی آماده پرتاب پایین صفحه
 if(st==="play"){
 if(fly)drawNeedle(CX,fly.y,0,fly.c,1);
 else if(queue.length>0)drawNeedle(CX,readyY,0,queue[0],1);
 }
 
-// نمایش صف چاقوهای باقی‌مانده با رنگ واقعی هر چاقو در گوشه پایین چپ (مثل ویدیو)
 for(let i=0;i<queue.length;i++){
 ctx.save();ctx.translate(26,H-42-i*14);ctx.rotate(0.75);
 ctx.fillStyle=queue[i];
@@ -576,7 +483,6 @@ ctx.beginPath();ctx.roundRect(-13,-2.8,26,5.6,2.5);ctx.fill();
 ctx.restore();
 }
 
-// اعداد امتیاز شناور (+11 و +21)
 floats.forEach((f,i)=>{
 f.y-=1.3;f.l-=0.032;
 ctx.globalAlpha=Math.max(0,f.l);ctx.fillStyle=f.col;
