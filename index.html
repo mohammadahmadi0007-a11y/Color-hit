@@ -261,12 +261,11 @@ stuck.push({a,c:"#cbd5e1",pre:true});
 
 rotSpd=0.028+Math.min(0.026,lvl*0.0022);
 
-// ستاره جایزه روی دایره
 const starA=1.25;
 if(!stuck.some(k=>angDiff(k.a,starA)<0.35)){
 pickups.push({a:starA,type:"star",hit:false});
 }
-// آیتم نشانه‌گیر لیزری (از مرحله ۲ به بعد ظاهر می‌شود؛ با زدن چاقو به آن، خط نقطه‌چین به مدت ۲۰ ثانیه فعال می‌شود)
+// آیتم نشانه‌گیر لیزری (۷ ثانیه‌ای) از مرحله ۲ به بعد
 if(lvl>=2){
 const aimA=starA+Math.PI;
 if(!stuck.some(k=>angDiff(k.a,aimA)<0.35)){
@@ -346,7 +345,6 @@ for(let i=0;i<10;i++){const rad=i%2===0?r:r*0.48,a=i*Math.PI/5-Math.PI/2;ctx.lin
 ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
 }
 
-// آیکون هدف لیزری (نقطه‌چین ۲۰ ثانیه‌ای) روی لبه دایره
 function drawAimPickup(x,y,r){
 ctx.save();ctx.translate(x,y);
 ctx.fillStyle="#0f172a";ctx.beginPath();ctx.arc(0,0,r,0,6.28);ctx.fill();
@@ -446,9 +444,9 @@ p.hit=true;
 if(p.type==="star"){
 stars++;updStars();pts=21;boom(CX,CY+R+18,"#facc15",16);beep(980,.12);
 }else if(p.type==="aim"){
-aimUntil=Date.now()+20000;
+aimUntil=Date.now()+7000;
 pts=21;boom(CX,CY+R+18,"#38bdf8",18);beep(1050,.15);
-toast("🎯 نشانه‌گیر ۲۰ ثانیه‌ای فعال شد!");
+toast("🎯 نشانه‌گیر ۷ ثانیه‌ای فعال شد!");
 }
 }
 });
@@ -517,15 +515,14 @@ ctx.fillStyle=shd;ctx.beginPath();ctx.arc(CX,curY,R,0,6.28);ctx.fill();
 
 if(isBoss)drawBossFace(CX,curY,R*0.62);
 
-// خط نقطه‌چین فقط وقتی فعال است که بازیکن آیتم نشانه‌گیر را زده باشد (به مدت ۲۰ ثانیه)
+// خط نقطه‌چین فقط وقتی فعال است که بازیکن آیتم نشانه‌گیر را زده باشد (به مدت ۷ ثانیه)
 const aimRem=aimUntil-Date.now();
 if(st==="play"&&aimRem>0&&queue.length>0){
 ctx.fillStyle="rgba(56,189,248,0.65)";
 for(let y=readyY-68;y>curY+R+12;y-=18){
 ctx.beginPath();ctx.arc(CX,y,3,0,6.28);ctx.fill();
 }
-// نوار تایمر ۲۰ ثانیه‌ای پایین چاقو
-const pct=Math.max(0,aimRem/20000);
+const pct=Math.max(0,aimRem/7000);
 ctx.fillStyle="rgba(255,255,255,0.15)";ctx.fillRect(CX-35,H-28,70,4);
 ctx.fillStyle="#38bdf8";ctx.fillRect(CX-35,H-28,70*pct,4);
 }
