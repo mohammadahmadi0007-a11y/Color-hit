@@ -191,10 +191,11 @@ const h=lb.length?lb.slice(0,10).map((p,idx)=>`<div class="lb-row ${p.id===usr.i
 document.getElementById("lb-start").innerHTML=h;document.getElementById("lb-over").innerHTML=h;
 }
 
+// موتور صوتی + قطع خودکار موزیک هنگام مینی‌مایز (پنجره کردن) یا خروج از مینی‌اپ
 let snd=true,ac=null,bgmInt=null,beatStep=0;
 function initAudio(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume()}
 function beep(f,d,t="sine",v=0.14){
-if(!snd)return;
+if(!snd||document.hidden)return;
 try{
 initAudio();
 const o=ac.createOscillator(),g=ac.createGain();
@@ -208,11 +209,11 @@ function playChime(){
 [523.25,659.25,783.99,1046.5].forEach((f,i)=>setTimeout(()=>beep(f,.18,"triangle",0.12),i*65));
 }
 function startBGM(){
-stopBGM();if(!snd)return;
+stopBGM();if(!snd||document.hidden)return;
 const bass=[110,110,146.8,130.8,110,110,164.8,146.8];
 const lead=[440,0,523.2,587.3,659.2,0,523.2,440];
 bgmInt=setInterval(()=>{
-if(!snd||st!=="play")return;
+if(!snd||st!=="play"||document.hidden)return;
 const b=bass[beatStep%8],l=lead[beatStep%8];
 beep(b,0.16,"triangle",0.055);
 if(beatStep%2===1)beep(900,0.03,"square",0.015);
@@ -223,10 +224,26 @@ beatStep++;
 function stopBGM(){if(bgmInt){clearInterval(bgmInt);bgmInt=null}}
 function toggleSound(){
 snd=!snd;document.getElementById("btn-snd").innerText=snd?"🔊":"🔇";
-if(snd&&st==="play")startBGM();else stopBGM();
+if(snd&&st==="play"&&!document.hidden)startBGM();else stopBGM();
 }
 
-// رندرینگ باکیفیت رتینا (High-DPI Retina) برای وضوح فوق‌العاده روی گوشی‌ها
+// مدیریت قطع و وصل خودکار صدا هنگام پنجره کردن یا خروج از صفحه
+function handleVisibility(){
+if(document.hidden){
+stopBGM();
+if(ac&&ac.state==="running")ac.suspend().catch(()=>{});
+}else{
+if(snd&&st==="play"){
+if(ac&&ac.state==="suspended")ac.resume().catch(()=>{});
+startBGM();
+}
+}
+}
+document.addEventListener("visibilitychange",handleVisibility);
+window.addEventListener("pagehide",()=>{stopBGM();if(ac&&ac.state==="running")ac.suspend().catch(()=>{})});
+window.addEventListener("blur",()=>{stopBGM();if(ac&&ac.state==="running")ac.suspend().catch(()=>{})});
+window.addEventListener("focus",()=>{if(!document.hidden&&snd&&st==="play"){if(ac&&ac.state==="suspended")ac.resume().catch(()=>{});startBGM()}});
+
 const cv=document.getElementById("cv"),ctx=cv.getContext("2d");
 let W=360,H=640,CX=180,CY=265,R=102,DPR=1;
 function resize(){
@@ -265,7 +282,6 @@ stuck.push({a,c:"#cbd5e1",pre:true});
 }
 }
 
-// سرعت چرخش یک‌طرفه بر حسب رادیان بر ثانیه (مستقل از نرخ فریم گوشی)
 rotSpd=1.8+Math.min(1.5,lvl*0.14);
 
 const starA=1.25;
@@ -296,8 +312,8 @@ document.getElementById("hud-score").innerText="0";
 setupLevel();st="play";initAudio();beep(560,.1);startBGM();
 }
 function togglePause(){
-if(st==="play"){st="pause";document.getElementById("pause-screen").classList.remove("hd")}
-else if(st==="pause"){st="play";lastT=0;document.getElementById("pause-screen").classList.add("hd")}
+if(st==="play"){st="pause";stopBGM();document.getElementById("pause-screen").classList.remove("hd")}
+else if(st==="pause"){st="play";lastT=0;startBGM();document.getElementById("pause-screen").classList.add("hd")}
 }
 function openMenu(){st="menu";stopBGM();document.getElementById("over-screen").classList.add("hd");document.getElementById("pause-screen").classList.add("hd");document.getElementById("start-screen").classList.remove("hd");syncLB(0)}
 
@@ -337,12 +353,38 @@ ctx.fillStyle="#e0f2fe";ctx.beginPath();ctx.moveTo(0,-58);ctx.lineTo(6,-32);ctx.
 }else{
 ctx.beginPath();ctx.moveTo(0,-55);ctx.lineTo(4.6,-6);ctx.lineTo(-4.6,-6);ctx.closePath();ctx.fill();
 }
-// حلقه دسته با سایه و هایلایت براق
 ctx.fillStyle="#18181b";ctx.beginPath();ctx.arc(0,0,9,0,6.28);ctx.fill();
 ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,0,6.2,0,6.28);ctx.fill();
 ctx.fillStyle="rgba(255,255,255,0.45)";ctx.beginPath();ctx.arc(-1.8,-1.8,2,0,6.28);ctx.fill();
 if(curSkin===2||curSkin===4){ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-54);ctx.lineTo(0,-9);ctx.stroke()}
 if(curSkin===5){ctx.fillStyle="#fde047";ctx.fillRect(-6,-9,12,3.5)}
+ctx.restore();
+}
+
+// رسم آیکون خنجر رنگی در نوار پایین سمت چپ
+function drawQueueDagger(x,y,col,isNext){
+ctx.save();ctx.translate(x,y);ctx.rotate(-0.68);
+if(isNext){
+ctx.shadowColor=col;ctx.shadowBlur=8;
+}
+// تیغه خنجر
+ctx.fillStyle=isNext?"#ffffff":"#cbd5e1";
+ctx.beginPath();
+ctx.moveTo(15,0);
+ctx.lineTo(2,-3.4);
+ctx.lineTo(2,3.4);
+ctx.closePath();
+ctx.fill();
+// گارد (محافظ) خنجر
+ctx.fillStyle=col;
+ctx.beginPath();
+ctx.roundRect(0,-5.5,2.6,11,1.2);
+ctx.fill();
+// دسته خنجر
+ctx.fillStyle=col;
+ctx.beginPath();
+ctx.roundRect(-10,-2.6,10,5.2,2);
+ctx.fill();
 ctx.restore();
 }
 
@@ -423,7 +465,6 @@ readyY+=(H-95-readyY)*(1-Math.pow(0.00001,dt));
 
 ctx.clearRect(0,0,W,H);
 
-// پس‌زمینه موج‌دار با عمق و کنتراست بالا
 const bgGrd=ctx.createRadialGradient(CX,CY,R*0.5,CX,H*0.5,H*0.8);
 bgGrd.addColorStop(0,"#222227");bgGrd.addColorStop(1,"#131316");
 ctx.fillStyle=bgGrd;ctx.fillRect(0,0,W,H);
@@ -510,7 +551,6 @@ drawNeedle(ricochet.x,ricochet.y,ricochet.rot,ricochet.c,1,false);
 const curY=CY-bounce;
 const isBoss=(lvl%3===0);
 
-// سایه نرم زیر دایره مرکزی
 ctx.fillStyle="rgba(0,0,0,0.35)";
 ctx.beginPath();ctx.arc(CX,curY+10,R+2,0,6.28);ctx.fill();
 
@@ -528,7 +568,6 @@ else if(p.type==="aim")drawAimPickup(px,py,10);
 }
 });
 
-// رسم بخش‌های رنگی دایره
 const segSize=(Math.PI*2)/segs.length;
 for(let i=0;i<segs.length;i++){
 ctx.fillStyle=segs[i];
@@ -537,14 +576,12 @@ ctx.arc(CX,curY,R,rot+i*segSize,rot+(i+1)*segSize+0.008);
 ctx.closePath();ctx.fill();
 }
 
-// نورپردازی سه‌بعدی روی دایره
 const shd=ctx.createRadialGradient(CX-R*0.28,curY-R*0.28,R*0.08,CX,curY,R);
 shd.addColorStop(0,"rgba(255,255,255,0.24)");
 shd.addColorStop(0.7,"rgba(255,255,255,0)");
 shd.addColorStop(1,"rgba(0,0,0,0.24)");
 ctx.fillStyle=shd;ctx.beginPath();ctx.arc(CX,curY,R,0,6.28);ctx.fill();
 
-// درخشش سفید لحظه‌ای هنگام برخورد سوزن
 if(hitGlow>0){
 ctx.fillStyle=`rgba(255,255,255,${hitGlow})`;
 ctx.beginPath();ctx.arc(CX,curY,R,0,6.28);ctx.fill();
@@ -552,7 +589,6 @@ ctx.beginPath();ctx.arc(CX,curY,R,0,6.28);ctx.fill();
 
 if(isBoss)drawBossFace(CX,curY,R*0.62);
 
-// خط نقطه‌چین سفید درخشان (فعال به مدت ۷ ثانیه پس از زدن آیتم نشانه‌گیر)
 const aimRem=aimUntil-Date.now();
 if(st==="play"&&aimRem>0&&queue.length>0){
 ctx.save();
@@ -567,7 +603,6 @@ ctx.fillStyle="rgba(255,255,255,0.18)";ctx.beginPath();ctx.roundRect(CX-35,H-28,
 ctx.fillStyle="#ffffff";ctx.beginPath();ctx.roundRect(CX-35,H-28,70*pct,4,2);ctx.fill();
 }
 
-// سوزن آماده پرتاب یا در حال پرواز با دنباله سرعتی
 if(st==="play"){
 if(fly){
 const trl=ctx.createLinearGradient(CX,fly.y,CX,Math.min(fly.startY,fly.y+90));
@@ -577,11 +612,10 @@ drawNeedle(CX,fly.y,0,fly.c,1,false);
 }else if(queue.length>0)drawNeedle(CX,readyY,0,queue[0],1,false);
 }
 
+// رسم خنجرهای رنگی در گوشه پایین چپ طوری که از بالا به پایین کم شوند
 for(let i=0;i<queue.length;i++){
-ctx.save();ctx.translate(26,H-42-i*14);ctx.rotate(0.75);
-ctx.fillStyle=queue[i];
-ctx.beginPath();ctx.roundRect(-13,-2.8,26,5.6,2.5);ctx.fill();
-ctx.restore();
+const posFromBottom=queue.length-1-i;
+drawQueueDagger(28,H-38-posFromBottom*17,queue[i],i===0);
 }
 
 floats.forEach((f,i)=>{
