@@ -321,7 +321,6 @@ const h=lb.length?lb.slice(0,10).map((p,idx)=>`<div class="lb-row ${p.id===usr.i
 document.getElementById("lb-start").innerHTML=h;document.getElementById("lb-over").innerHTML=h;
 }
 
-// موتور صوتی دقیق مبتنی بر AudioContext بدون ایجاد کوچک‌ترین لگ روی رندرینگ
 let snd=true,ac=null,nextNoteTime=0,beatStep=0,bgmRunning=false;
 const BASS_NOTES=[110,110,146.8,130.8,110,110,164.8,146.8];
 const LEAD_NOTES=[440,0,523.2,587.3,659.2,0,523.2,440];
@@ -390,6 +389,7 @@ window.addEventListener("focus",()=>{lastT=0;if(!document.hidden&&snd&&st==="pla
 
 const cv=document.getElementById("cv"),ctx=cv.getContext("2d",{alpha:false});
 const wheelCv=document.createElement("canvas"),wheelCtx=wheelCv.getContext("2d");
+const bossCv=document.createElement("canvas"),bossCtx=bossCv.getContext("2d");
 const bgCv=document.createElement("canvas"),bgCtx=bgCv.getContext("2d");
 let W=360,H=640,CX=180,CY=265,R=102,DPR=1,wheelHalf=150;
 
@@ -407,9 +407,8 @@ bgCtx.stroke();
 }
 }
 
-// پیش‌رندر کردن گوی رنگی و صورت باس در یک بوم مجزا برای چرخش ۱۲۰ فریم بدون کوچک‌ترین لگ
+// بوم کشِ چرخانِ حلقه رنگی (فقط حلقه رنگی می‌چرخد)
 function buildWheelCache(){
-const isBoss=(lvl%3===0);
 wheelHalf=Math.ceil(R+16);
 const size=wheelHalf*2;
 wheelCv.width=Math.round(size*DPR);
@@ -431,8 +430,16 @@ shd.addColorStop(0,"rgba(255,255,255,0.24)");
 shd.addColorStop(0.7,"rgba(255,255,255,0)");
 shd.addColorStop(1,"rgba(0,0,0,0.24)");
 wheelCtx.fillStyle=shd;wheelCtx.beginPath();wheelCtx.arc(cx,cy,R,0,6.28);wheelCtx.fill();
+}
 
-if(isBoss)drawBossFace(wheelCtx,cx,cy,R*0.62);
+// بوم کشِ ثابتِ صورت کدو تنبل (همیشه صاف و ثابت وسط گوی می‌ماند و همراه گوی نمی‌چرخد)
+function buildBossCache(){
+const size=wheelHalf*2;
+bossCv.width=Math.round(size*DPR);
+bossCv.height=Math.round(size*DPR);
+bossCtx.setTransform(DPR,0,0,DPR,0,0);
+bossCtx.clearRect(0,0,size,size);
+drawBossFace(bossCtx,wheelHalf,wheelHalf,R*0.62);
 }
 
 function resize(){
@@ -443,6 +450,7 @@ ctx.setTransform(DPR,0,0,DPR,0,0);
 CX=W/2;CY=H*0.39;R=Math.min(W,H)*0.265;
 buildBackgroundCache();
 if(segs.length)buildWheelCache();
+buildBossCache();
 }
 window.addEventListener("resize",resize);
 
@@ -706,7 +714,6 @@ hitGlow=Math.max(0,hitGlow-3.5*dt);
 if(flash>0)flash=Math.max(0,flash-2.8*dt);
 readyY+=(H-95-readyY)*(1-Math.pow(0.00001,dt));
 
-// رسم پس‌زمینه از حافظه کش (فوق‌سریع بدون مصرف CPU)
 ctx.drawImage(bgCv,0,0,W,H);
 
 ctx.save();
@@ -785,6 +792,7 @@ drawNeedle(ricochet.x,ricochet.y,ricochet.rot,ricochet.c,1,false);
 }
 
 const curY=CY-bounce;
+const isBoss=(lvl%3===0);
 
 ctx.fillStyle="rgba(0,0,0,0.35)";
 ctx.beginPath();ctx.arc(CX,curY+10,R+2,0,6.28);ctx.fill();
@@ -804,7 +812,7 @@ else if(p.type==="aim")drawAimPickup(px,py,10);
 }
 }
 
-// چرخش تصویر از پیش رندر شده گوی با شتاب سخت‌افزاری GPU (فوق‌العاده روان و بدون کوچک‌ترین گیر)
+// چرخش حلقه رنگی
 ctx.save();
 ctx.translate(CX,curY);
 ctx.rotate(rot);
@@ -814,6 +822,11 @@ ctx.restore();
 if(hitGlow>0){
 ctx.fillStyle=`rgba(255,255,255,${hitGlow})`;
 ctx.beginPath();ctx.arc(CX,curY,R,0,6.28);ctx.fill();
+}
+
+// رسم ثابت صورت کدو وسط گوی (بدون چرخش همراه با گوی)
+if(isBoss){
+ctx.drawImage(bossCv,CX-wheelHalf,curY-wheelHalf,wheelHalf*2,wheelHalf*2);
 }
 
 const aimRem=aimUntil-Date.now();
