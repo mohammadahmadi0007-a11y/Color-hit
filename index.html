@@ -16,22 +16,23 @@ canvas{display:block;width:100%;height:100%;transform:translateZ(0);will-change:
 .shop-fab{position:absolute;top:66px;left:16px;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.32);display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer;z-index:12;font-size:18px}
 .shop-fab span{font-size:9px;color:#fbbf24;font-weight:bold;margin-top:1px}
 .overlay{position:absolute;inset:0;background:rgba(14,14,18,.96);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:18px;z-index:25;overflow-y:auto}
+#start-screen{background:radial-gradient(circle at center,rgba(14,14,18,.62),rgba(10,10,14,.86));backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .hd{display:none!important}
-.logo{font-size:30px;font-weight:900;color:#facc15;margin-bottom:6px;letter-spacing:1px}
-.sub{font-size:12px;color:#cbd5e1;margin-bottom:12px;text-align:center}
-.card{width:100%;max-width:350px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:12px;margin-bottom:14px}
+.logo{font-size:30px;font-weight:900;color:#facc15;margin-bottom:6px;letter-spacing:1px;text-shadow:0 3px 14px rgba(0,0,0,.8)}
+.sub{font-size:12px;color:#e2e8f0;margin-bottom:12px;text-align:center;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+.card{width:100%;max-width:350px;background:rgba(18,18,24,.72);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:12px;margin-bottom:14px;box-shadow:0 8px 24px rgba(0,0,0,.45)}
 .card-title{font-size:13px;font-weight:bold;color:#fbbf24;margin-bottom:8px;display:flex;justify-content:space-between}
 .lb-list{max-height:185px;overflow-y:auto}
-.lb-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:10px;margin-bottom:5px;background:rgba(255,255,255,.04);font-size:13px}
-.lb-row.me{background:rgba(250,204,21,.18);border:1px solid #facc15}
+.lb-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:10px;margin-bottom:5px;background:rgba(255,255,255,.06);font-size:13px}
+.lb-row.me{background:rgba(250,204,21,.22);border:1px solid #facc15}
 .lb-user{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
 .av{width:28px;height:28px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-weight:900;font-size:12px;color:#fff;flex-shrink:0;overflow:hidden;border:1px solid rgba(255,255,255,.3)}
 .av img{width:100%;height:100%;object-fit:cover}
 .lb-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:bold}
 .btn{width:100%;max-width:350px;padding:13px;border:none;border-radius:14px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:9px}
-.btn-play{background:linear-gradient(135deg,#facc15,#f59e0b);color:#111}
+.btn-play{background:linear-gradient(135deg,#facc15,#f59e0b);color:#111;box-shadow:0 4px 16px rgba(245,158,11,.35)}
 .btn-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:20px;padding:11px}
-.btn-share{background:rgba(255,255,255,.1);color:#fff;font-size:13px;border:1px solid rgba(255,255,255,.12)}
+.btn-share{background:rgba(255,255,255,.14);color:#fff;font-size:13px;border:1px solid rgba(255,255,255,.18)}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:350px;margin-bottom:12px}
 .stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px;text-align:center}
 .shop-wrap{width:100%;max-width:360px;direction:ltr}
@@ -43,7 +44,7 @@ canvas{display:block;width:100%;height:100%;transform:translateZ(0);will-change:
 .sk-cost{font-size:11px;font-weight:bold;margin-top:3px;color:#cbd5e1}
 .sk-cost.act{color:#facc15}
 .sk-cost.unlk{color:#4ade80}
-.brand-tag{margin-top:6px;padding:6px 14px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:11px;color:#94a3b8;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.brand-tag{margin-top:6px;padding:6px 14px;border-radius:20px;background:rgba(18,18,24,.75);border:1px solid rgba(255,255,255,.16);font-size:11px;color:#cbd5e1;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
 .brand-tag b{color:#facc15;font-family:sans-serif;direction:ltr}
 #toast{position:absolute;top:64px;left:50%;transform:translateX(-50%);background:#fff;color:#111;padding:8px 16px;border-radius:12px;font-size:12px;font-weight:bold;z-index:50;opacity:0;transition:.2s;pointer-events:none;white-space:nowrap}
 </style>
@@ -407,7 +408,6 @@ bgCtx.stroke();
 }
 }
 
-// بوم کشِ چرخانِ حلقه رنگی (فقط حلقه رنگی می‌چرخد)
 function buildWheelCache(){
 wheelHalf=Math.ceil(R+16);
 const size=wheelHalf*2;
@@ -432,7 +432,6 @@ shd.addColorStop(1,"rgba(0,0,0,0.24)");
 wheelCtx.fillStyle=shd;wheelCtx.beginPath();wheelCtx.arc(cx,cy,R,0,6.28);wheelCtx.fill();
 }
 
-// بوم کشِ ثابتِ صورت کدو تنبل (همیشه صاف و ثابت وسط گوی می‌ماند و همراه گوی نمی‌چرخد)
 function buildBossCache(){
 const size=wheelHalf*2;
 bossCv.width=Math.round(size*DPR);
@@ -460,6 +459,21 @@ let segs=[PAL[0]],stuck=[],pickups=[],queue=[],fly=null,ricochet=null,brokenKniv
 let readyY=0,bounce=0,shake=0,hitGlow=0,parts=[],floats=[],flash=0,aimUntil=0,lastT=0,smoothDt=1/60;
 
 resize();
+
+// ساخت صحنه زنده پس‌زمینه برای صفحه شروع (شبیه نسخه تلگرام)
+function setupMenuPreview(){
+segs=[...PAL];
+buildWheelCache();
+stuck=[];
+for(let i=0;i<5;i++){
+const a=(Math.PI*2/5)*i+0.3;
+const segIdx=Math.floor(a/((Math.PI*2)/4))%4;
+stuck.push({a,c:PAL[segIdx],pre:false});
+}
+pickups=[{a:0.9,type:"star",hit:false},{a:4.1,type:"star",hit:false}];
+rotSpd=0.95;
+}
+setupMenuPreview();
 
 function norm(a){a%=Math.PI*2;return a<0?a+Math.PI*2:a}
 function angDiff(a,b){let d=Math.abs(norm(a)-norm(b));return d>Math.PI?Math.PI*2-d:d}
@@ -518,7 +532,14 @@ function togglePause(){
 if(st==="play"){st="pause";stopBGM();document.getElementById("pause-screen").classList.remove("hd")}
 else if(st==="pause"){st="play";lastT=0;startBGM();document.getElementById("pause-screen").classList.add("hd")}
 }
-function openMenu(){st="menu";stopBGM();document.getElementById("over-screen").classList.add("hd");document.getElementById("pause-screen").classList.add("hd");document.getElementById("start-screen").classList.remove("hd");syncLB(0)}
+function openMenu(){
+st="menu";stopBGM();
+setupMenuPreview();
+document.getElementById("over-screen").classList.add("hd");
+document.getElementById("pause-screen").classList.add("hd");
+document.getElementById("start-screen").classList.remove("hd");
+syncLB(0);
+}
 
 const wrap=document.getElementById("wrap");
 wrap.addEventListener("pointerdown",e=>{
@@ -719,6 +740,11 @@ ctx.drawImage(bgCv,0,0,W,H);
 ctx.save();
 if(shake>0.4)ctx.translate((Math.random()-0.5)*shake,(Math.random()-0.5)*shake);
 
+// در صفحه منو هم گوی به نرمی در پس‌زمینه می‌چرخد
+if(st==="menu"){
+rot=norm(rot+rotSpd*dt);
+}
+
 if(st==="play"){
 rot=norm(rot+rotSpd*dt);
 
@@ -792,7 +818,7 @@ drawNeedle(ricochet.x,ricochet.y,ricochet.rot,ricochet.c,1,false);
 }
 
 const curY=CY-bounce;
-const isBoss=(lvl%3===0);
+const isBoss=(st==="play"&&lvl%3===0);
 
 ctx.fillStyle="rgba(0,0,0,0.35)";
 ctx.beginPath();ctx.arc(CX,curY+10,R+2,0,6.28);ctx.fill();
@@ -812,7 +838,6 @@ else if(p.type==="aim")drawAimPickup(px,py,10);
 }
 }
 
-// چرخش حلقه رنگی
 ctx.save();
 ctx.translate(CX,curY);
 ctx.rotate(rot);
@@ -824,7 +849,6 @@ ctx.fillStyle=`rgba(255,255,255,${hitGlow})`;
 ctx.beginPath();ctx.arc(CX,curY,R,0,6.28);ctx.fill();
 }
 
-// رسم ثابت صورت کدو وسط گوی (بدون چرخش همراه با گوی)
 if(isBoss){
 ctx.drawImage(bossCv,CX-wheelHalf,curY-wheelHalf,wheelHalf*2,wheelHalf*2);
 }
@@ -849,9 +873,11 @@ drawNeedle(CX,fly.y,0,fly.c,1,false);
 }else if(queue.length>0)drawNeedle(CX,readyY,0,queue[0],1,false);
 }
 
+if(st==="play"){
 for(let i=0;i<queue.length;i++){
 const posFromBottom=queue.length-1-i;
 drawQueueDagger(28,H-38-posFromBottom*17,queue[i],i===0);
+}
 }
 
 for(let i=floats.length-1;i>=0;i--){
