@@ -152,7 +152,6 @@ let curSkin=parseInt(localStorage.getItem("ch_skin_v2")||"0",10);
 if(curSkin<0||curSkin>11)curSkin=0;
 let lb=[];
 
-// ۱۲ مدل خنجر و سوزن دقیقاً مطابق دسته‌بندی GAMEE (Basic, Rare, Legendary)
 const SKINS=[
 {id:0,tier:0,tName:"Basic",bonus:10,cost:0},
 {id:1,tier:0,tName:"Basic",bonus:10,cost:5},
@@ -179,7 +178,6 @@ updStars();
 document.getElementById("hud-best").innerText=best;
 function toast(m){const t=document.getElementById("toast");t.innerText=m;t.style.opacity="1";setTimeout(()=>t.style.opacity="0",2000)}
 
-// رسم شکل دقیق هر کدام از ۱۲ مدل خنجر (هم در فروشگاه و هم در گیم‌پلی)
 function renderSkinShape(c,id,col,isLocked){
 const g=c.createLinearGradient(-5,0,5,0);
 if(isLocked){
@@ -190,51 +188,39 @@ g.addColorStop(0,"#94a3b8");g.addColorStop(0.45,"#ffffff");g.addColorStop(1,"#47
 c.fillStyle=g;
 
 if(id===0){
-// سوزن کلاسیک صاف
 c.beginPath();c.moveTo(0,-55);c.lineTo(4.6,-6);c.lineTo(-4.6,-6);c.closePath();c.fill();
 }else if(id===1){
-// سوزن باریک با حلقه میانی
 c.beginPath();c.moveTo(0,-56);c.lineTo(3.5,-6);c.lineTo(-3.5,-6);c.closePath();c.fill();
 c.beginPath();c.arc(0,-24,4.8,0,6.28);c.fill();
 }else if(id===2){
-// خنجر دو لبه الماسی
 c.beginPath();c.moveTo(0,-56);c.lineTo(6.5,-24);c.lineTo(3,-6);c.lineTo(-3,-6);c.lineTo(-6.5,-24);c.closePath();c.fill();
 }else if(id===3){
-// خنجر پهن و کوتاه
 c.beginPath();c.moveTo(0,-54);c.lineTo(6.5,-34);c.lineTo(4,-6);c.lineTo(-4,-6);c.lineTo(-6.5,-34);c.closePath();c.fill();
 }else if(id===4){
-// اره زیگزاگی (Rare 1)
 c.beginPath();c.moveTo(0,-57);
 for(let y=-50;y<=-12;y+=7){c.lineTo(5.5,y);c.lineTo(2,y+3.5)}
 c.lineTo(3,-6);c.lineTo(-3,-6);
 for(let y=-12;y>=-50;y-=7){c.lineTo(-2,y+3.5);c.lineTo(-5.5,y)}
 c.closePath();c.fill();
 }else if(id===5){
-// نیزه موج‌دار (Rare 2)
 c.beginPath();c.moveTo(0,-57);c.lineTo(6,-40);c.lineTo(2.5,-26);c.lineTo(5.5,-15);c.lineTo(3,-6);
 c.lineTo(-3,-6);c.lineTo(-5.5,-15);c.lineTo(-2.5,-26);c.lineTo(-6,-40);c.closePath();c.fill();
 }else if(id===6){
-// شمشیر گارددار (Rare 3)
 c.beginPath();c.moveTo(0,-57);c.lineTo(4.5,-22);c.lineTo(7.5,-17);c.lineTo(3,-13);c.lineTo(3,-6);
 c.lineTo(-3,-6);c.lineTo(-3,-13);c.lineTo(-7.5,-17);c.lineTo(-4.5,-22);c.closePath();c.fill();
 }else if(id===7){
-// خنجر حفره‌دار (Rare 4)
 c.beginPath();c.moveTo(0,-57);c.lineTo(6,-35);c.lineTo(3.5,-6);c.lineTo(-3.5,-6);c.lineTo(-6,-35);c.closePath();c.fill();
 c.fillStyle=isLocked?"#27272a":"#18181b";c.fillRect(-2.5,-28,5,4);c.fillRect(-2.5,-20,5,4);
 }else if(id===8){
-// نیزه اژدها (Legendary 1)
 c.beginPath();c.moveTo(0,-58);c.lineTo(7,-44);c.lineTo(3,-38);c.lineTo(6.5,-28);c.lineTo(2.5,-20);c.lineTo(3.5,-6);
 c.lineTo(-3.5,-6);c.lineTo(-2.5,-20);c.lineTo(-6.5,-28);c.lineTo(-3,-38);c.lineTo(-7,-44);c.closePath();c.fill();
 }else if(id===9){
-// خنجر سلطنتی سه‌بند (Legendary 2)
 c.beginPath();c.moveTo(0,-58);c.lineTo(5.5,-42);c.lineTo(3,-6);c.lineTo(-3,-6);c.lineTo(-5.5,-42);c.closePath();c.fill();
 c.beginPath();c.arc(0,-34,4.8,0,6.28);c.arc(0,-24,4.8,0,6.28);c.arc(0,-14,4.8,0,6.28);c.fill();
 }else if(id===10){
-// خنجر مهره‌ای (Legendary 3)
 c.beginPath();c.moveTo(0,-58);c.lineTo(4,-6);c.lineTo(-4,-6);c.closePath();c.fill();
 for(let y=-44;y<=-12;y+=8){c.beginPath();c.ellipse(0,y,6,3.2,0,0,6.28);c.fill()}
 }else if(id===11){
-// خنجر مارپیچ S شکل (Legendary 4)
 c.beginPath();c.moveTo(0,-58);
 c.quadraticCurveTo(9,-44,0,-32);
 c.quadraticCurveTo(-9,-20,3,-6);
@@ -244,7 +230,6 @@ c.quadraticCurveTo(5,-44,0,-58);
 c.closePath();c.fill();
 }
 
-// دسته انتهایی
 c.fillStyle=isLocked?"#09090b":"#18181b";
 c.beginPath();c.arc(0,0,9,0,6.28);c.fill();
 c.fillStyle=isLocked?"#18181b":col;
@@ -277,7 +262,6 @@ return `<div class="sk-card" onclick="pickSkin(${sk.id})">
 }).join("");
 }
 
-// رسم مدال‌های دایره‌ای پرتودار دقیقاً مثل تصویر فروشگاه GAMEE
 SKINS.forEach(sk=>{
 const cEl=document.getElementById("skcv-"+sk.id);
 if(!cEl)return;
@@ -285,7 +269,6 @@ const c=cEl.getContext("2d");
 const ok=owned.includes(sk.id),act=curSkin===sk.id;
 c.clearRect(0,0,132,132);
 
-// پس‌زمینه دایره‌ای تیره با پرتوهای خورشیدی
 c.save();
 c.beginPath();c.arc(66,66,54,0,6.28);c.clip();
 c.fillStyle="#222328";c.fillRect(0,0,132,132);
@@ -296,12 +279,10 @@ c.beginPath();c.moveTo(66,66);c.arc(66,66,60,a0,a1);c.closePath();c.fill();
 }
 c.restore();
 
-// حاشیه رنگی دور دایره (طلایی برای انتخاب‌شده، و رنگ رده برای بقیه)
 const ringCol=act?"#facc15":sk.tier===0?"#9ca3af":sk.tier===1?"#38bdf8":"#f43f5e";
 c.strokeStyle=ringCol;c.lineWidth=act?7:6;
 c.beginPath();c.arc(66,66,54,0,6.28);c.stroke();
 
-// رسم خنجر مورب داخل دایره
 c.save();
 c.translate(54,84);
 c.rotate(0.46);
@@ -520,13 +501,52 @@ ctx.fill();
 ctx.restore();
 }
 
+// ستاره سه‌بعدی پفکی دقیقاً مشابه نسخه تلگرام (بدون دورخط سفید، با سایه‌روشن چندضلعی زرد و نارنجی)
 function drawStar(x,y,r){
 ctx.save();ctx.translate(x,y);
-ctx.shadowColor="rgba(250,204,21,0.5)";ctx.shadowBlur=10;
-ctx.fillStyle="#f59e0b";ctx.strokeStyle="#fef08a";ctx.lineWidth=1.5;
+ctx.lineJoin="round";
+const pts=[];
+for(let i=0;i<10;i++){
+const rad=i%2===0?r:r*0.52;
+const a=i*Math.PI/5-Math.PI/2;
+pts.push({x:Math.cos(a)*rad,y:Math.sin(a)*rad});
+}
+// بدنه اصلی زرد طلایی با گوشه‌های نرم
+ctx.fillStyle="#facc15";
+ctx.strokeStyle="#facc15";
+ctx.lineWidth=3.5;
 ctx.beginPath();
-for(let i=0;i<10;i++){const rad=i%2===0?r:r*0.48,a=i*Math.PI/5-Math.PI/2;ctx.lineTo(Math.cos(a)*rad,Math.sin(a)*rad)}
-ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+ctx.moveTo(pts[0].x,pts[0].y);
+for(let i=1;i<10;i++)ctx.lineTo(pts[i].x,pts[i].y);
+ctx.closePath();
+ctx.fill();ctx.stroke();
+
+// وجه‌های سه‌بعدی نارنجی تیره (سمت راست و پایین پره‌ها)
+ctx.fillStyle="#f59e0b";
+for(let i=0;i<10;i+=2){
+const pOuter=pts[i];
+const pRight=pts[(i+1)%10];
+ctx.beginPath();
+ctx.moveTo(0,0);
+ctx.lineTo(pOuter.x,pOuter.y);
+ctx.lineTo(pRight.x,pRight.y);
+ctx.closePath();
+ctx.fill();
+}
+
+// درخشش زرد روشن روی پره‌های بالایی
+ctx.fillStyle="#fef08a";
+[0,8].forEach(idx=>{
+const pOuter=pts[idx];
+const pLeft=pts[(idx+9)%10];
+ctx.beginPath();
+ctx.moveTo(0,0);
+ctx.lineTo(pLeft.x*0.88,pLeft.y*0.88);
+ctx.lineTo(pOuter.x*0.88,pOuter.y*0.88);
+ctx.closePath();
+ctx.fill();
+});
+ctx.restore();
 }
 
 function drawAimPickup(x,y,r){
@@ -539,47 +559,78 @@ ctx.fillStyle="#ffffff";ctx.beginPath();ctx.arc(0,0,3.2,0,6.28);ctx.fill();
 ctx.restore();
 }
 
+// شکلک وسط گوی با کنتراست زرد-نارنجی زنده و عمق سه‌بعدی چشم و دهان (دقیقاً مشابه تلگرام)
 function drawBossFace(x,y,r){
 ctx.save();ctx.translate(x,y);
 ctx.beginPath();ctx.arc(0,0,r,0,6.28);ctx.clip();
 
-ctx.fillStyle="#facc15";
+// پایه زرد درخشان و شاداب
+ctx.fillStyle="#fde047";
 ctx.fillRect(-r,-r,r*2,r*2);
 
-ctx.fillStyle="#ea8c00";
+// سایه نارنجی گرم هلالی در قسمت بالای سر و اطراف
+ctx.fillStyle="#f59e0b";
 ctx.beginPath();ctx.arc(0,0,r,0,6.28);
-ctx.arc(0,r*0.24,r*0.86,0,6.28,true);
+ctx.arc(0,r*0.26,r*0.85,0,6.28,true);
 ctx.fill();
 
-ctx.fillStyle="#78350f";ctx.strokeStyle="#c2410c";ctx.lineWidth=2;
+// چشم چپ (پس‌زمینه نارنجی تند + مردمک قهوه‌ای عمیق)
+ctx.fillStyle="#ea580c";
 ctx.beginPath();
-ctx.moveTo(-r*0.64,-r*0.08);
-ctx.lineTo(-r*0.14,r*0.04);
-ctx.lineTo(-r*0.45,r*0.22);
-ctx.closePath();ctx.fill();ctx.stroke();
+ctx.moveTo(-r*0.66,-r*0.06);
+ctx.lineTo(-r*0.14,r*0.06);
+ctx.lineTo(-r*0.46,r*0.25);
+ctx.closePath();ctx.fill();
 
+ctx.fillStyle="#7c2d12";
 ctx.beginPath();
-ctx.moveTo(r*0.64,-r*0.08);
-ctx.lineTo(r*0.14,r*0.04);
-ctx.lineTo(r*0.45,r*0.22);
-ctx.closePath();ctx.fill();ctx.stroke();
+ctx.moveTo(-r*0.62,-r*0.01);
+ctx.lineTo(-r*0.19,r*0.07);
+ctx.lineTo(-r*0.45,r*0.23);
+ctx.closePath();ctx.fill();
 
-ctx.fillStyle="#78350f";ctx.strokeStyle="#c2410c";ctx.lineWidth=2;
+// چشم راست (پس‌زمینه نارنجی تند + مردمک قهوه‌ای عمیق)
+ctx.fillStyle="#ea580c";
 ctx.beginPath();
-ctx.moveTo(-r*0.62,r*0.22);
-ctx.lineTo(-r*0.32,r*0.36);
+ctx.moveTo(r*0.66,-r*0.06);
+ctx.lineTo(r*0.14,r*0.06);
+ctx.lineTo(r*0.46,r*0.25);
+ctx.closePath();ctx.fill();
+
+ctx.fillStyle="#7c2d12";
+ctx.beginPath();
+ctx.moveTo(r*0.62,-r*0.01);
+ctx.lineTo(r*0.19,r*0.07);
+ctx.lineTo(r*0.45,r*0.23);
+ctx.closePath();ctx.fill();
+
+// دهان خندان دندان‌دار با سایه سه‌بعدی داخل دهان
+ctx.fillStyle="#9a3412";
+ctx.beginPath();
+ctx.moveTo(-r*0.64,r*0.22);
+ctx.lineTo(-r*0.33,r*0.37);
 ctx.lineTo(-r*0.24,r*0.26);
-ctx.lineTo(-r*0.08,r*0.38);
-ctx.lineTo(r*0.08,r*0.38);
+ctx.lineTo(-r*0.08,r*0.39);
+ctx.lineTo(r*0.08,r*0.39);
 ctx.lineTo(r*0.24,r*0.26);
-ctx.lineTo(r*0.32,r*0.36);
-ctx.lineTo(r*0.62,r*0.22);
-ctx.quadraticCurveTo(r*0.48,r*0.76,0,r*0.76);
-ctx.quadraticCurveTo(-r*0.48,r*0.76,-r*0.62,r*0.22);
-ctx.closePath();ctx.fill();ctx.stroke();
+ctx.lineTo(r*0.33,r*0.37);
+ctx.lineTo(r*0.64,r*0.22);
+ctx.quadraticCurveTo(r*0.5,r*0.78,0,r*0.78);
+ctx.quadraticCurveTo(-r*0.5,r*0.78,-r*0.64,r*0.22);
+ctx.closePath();ctx.fill();
+
+// عمق قهوه‌ای تیره پایین دهان برای حس سه‌بعدی
+ctx.fillStyle="#7c2d12";
+ctx.beginPath();
+ctx.moveTo(-r*0.54,r*0.46);
+ctx.quadraticCurveTo(0,r*0.58,r*0.54,r*0.46);
+ctx.quadraticCurveTo(r*0.38,r*0.76,0,r*0.76);
+ctx.quadraticCurveTo(-r*0.38,r*0.76,-r*0.54,r*0.46);
+ctx.closePath();ctx.fill();
 
 ctx.restore();
-ctx.strokeStyle="#422006";ctx.lineWidth=2.5;
+// خط دور ظریف تیره دور صورت
+ctx.strokeStyle="#451a03";ctx.lineWidth=2.5;
 ctx.beginPath();ctx.arc(x,y,r,0,6.28);ctx.stroke();
 }
 
@@ -696,8 +747,8 @@ drawNeedle(CX+Math.cos(worldA)*(R+34),curY+Math.sin(worldA)*(R+34),worldA-Math.P
 pickups.forEach(p=>{
 if(!p.hit){
 const worldA=p.a+rot;
-const px=CX+Math.cos(worldA)*(R+20),py=curY+Math.sin(worldA)*(R+20);
-if(p.type==="star")drawStar(px,py,12);
+const px=CX+Math.cos(worldA)*(R+21),py=curY+Math.sin(worldA)*(R+21);
+if(p.type==="star")drawStar(px,py,13);
 else if(p.type==="aim")drawAimPickup(px,py,10);
 }
 });
