@@ -501,7 +501,6 @@ ctx.fill();
 ctx.restore();
 }
 
-// ستاره سه‌بعدی پفکی دقیقاً مشابه نسخه تلگرام (بدون دورخط سفید، با سایه‌روشن چندضلعی زرد و نارنجی)
 function drawStar(x,y,r){
 ctx.save();ctx.translate(x,y);
 ctx.lineJoin="round";
@@ -511,7 +510,6 @@ const rad=i%2===0?r:r*0.52;
 const a=i*Math.PI/5-Math.PI/2;
 pts.push({x:Math.cos(a)*rad,y:Math.sin(a)*rad});
 }
-// بدنه اصلی زرد طلایی با گوشه‌های نرم
 ctx.fillStyle="#facc15";
 ctx.strokeStyle="#facc15";
 ctx.lineWidth=3.5;
@@ -521,7 +519,6 @@ for(let i=1;i<10;i++)ctx.lineTo(pts[i].x,pts[i].y);
 ctx.closePath();
 ctx.fill();ctx.stroke();
 
-// وجه‌های سه‌بعدی نارنجی تیره (سمت راست و پایین پره‌ها)
 ctx.fillStyle="#f59e0b";
 for(let i=0;i<10;i+=2){
 const pOuter=pts[i];
@@ -534,7 +531,6 @@ ctx.closePath();
 ctx.fill();
 }
 
-// درخشش زرد روشن روی پره‌های بالایی
 ctx.fillStyle="#fef08a";
 [0,8].forEach(idx=>{
 const pOuter=pts[idx];
@@ -559,79 +555,87 @@ ctx.fillStyle="#ffffff";ctx.beginPath();ctx.arc(0,0,3.2,0,6.28);ctx.fill();
 ctx.restore();
 }
 
-// شکلک وسط گوی با کنتراست زرد-نارنجی زنده و عمق سه‌بعدی چشم و دهان (دقیقاً مشابه تلگرام)
+// شکلک کدو تنبلِ براق و سه‌بعدی با چشم‌های تیز و لبخند دندان‌دار دقیقاً مشابه عکس پروفایل
 function drawBossFace(x,y,r){
 ctx.save();ctx.translate(x,y);
+
+// حلقه تیره دور صورت
+ctx.fillStyle="#18181b";
+ctx.beginPath();ctx.arc(0,0,r+2.5,0,6.28);ctx.fill();
+
 ctx.beginPath();ctx.arc(0,0,r,0,6.28);ctx.clip();
 
-// پایه زرد درخشان و شاداب
-ctx.fillStyle="#fde047";
+// گرادیان سه‌بعدی زرد درخشان به نارنجی گرم
+const faceGrd=ctx.createRadialGradient(-r*0.2,-r*0.35,r*0.1,0,0,r);
+faceGrd.addColorStop(0,"#fef08a");
+faceGrd.addColorStop(0.42,"#facc15");
+faceGrd.addColorStop(0.85,"#f59e0b");
+faceGrd.addColorStop(1,"#d97706");
+ctx.fillStyle=faceGrd;
 ctx.fillRect(-r,-r,r*2,r*2);
 
-// سایه نارنجی گرم هلالی در قسمت بالای سر و اطراف
-ctx.fillStyle="#f59e0b";
-ctx.beginPath();ctx.arc(0,0,r,0,6.28);
-ctx.arc(0,r*0.26,r*0.85,0,6.28,true);
-ctx.fill();
+// انعکاس نور براق سفید در قسمت بالای پیشانی (مثل عکس پروفایل)
+const gloss=ctx.createRadialGradient(0,-r*0.62,2,0,-r*0.55,r*0.52);
+gloss.addColorStop(0,"rgba(255,255,255,0.65)");
+gloss.addColorStop(1,"rgba(255,255,255,0)");
+ctx.fillStyle=gloss;
+ctx.beginPath();ctx.ellipse(0,-r*0.56,r*0.46,r*0.24,0,0,6.28);ctx.fill();
 
-// چشم چپ (پس‌زمینه نارنجی تند + مردمک قهوه‌ای عمیق)
-ctx.fillStyle="#ea580c";
-ctx.beginPath();
-ctx.moveTo(-r*0.66,-r*0.06);
-ctx.lineTo(-r*0.14,r*0.06);
-ctx.lineTo(-r*0.46,r*0.25);
-ctx.closePath();ctx.fill();
-
-ctx.fillStyle="#7c2d12";
-ctx.beginPath();
-ctx.moveTo(-r*0.62,-r*0.01);
-ctx.lineTo(-r*0.19,r*0.07);
-ctx.lineTo(-r*0.45,r*0.23);
-ctx.closePath();ctx.fill();
-
-// چشم راست (پس‌زمینه نارنجی تند + مردمک قهوه‌ای عمیق)
-ctx.fillStyle="#ea580c";
-ctx.beginPath();
-ctx.moveTo(r*0.66,-r*0.06);
-ctx.lineTo(r*0.14,r*0.06);
-ctx.lineTo(r*0.46,r*0.25);
-ctx.closePath();ctx.fill();
-
-ctx.fillStyle="#7c2d12";
-ctx.beginPath();
-ctx.moveTo(r*0.62,-r*0.01);
-ctx.lineTo(r*0.19,r*0.07);
-ctx.lineTo(r*0.45,r*0.23);
-ctx.closePath();ctx.fill();
-
-// دهان خندان دندان‌دار با سایه سه‌بعدی داخل دهان
+// چشم چپ تیز و اخم‌دار (مثلث کج با سایه نارنجی تیره)
 ctx.fillStyle="#9a3412";
 ctx.beginPath();
-ctx.moveTo(-r*0.64,r*0.22);
-ctx.lineTo(-r*0.33,r*0.37);
-ctx.lineTo(-r*0.24,r*0.26);
-ctx.lineTo(-r*0.08,r*0.39);
-ctx.lineTo(r*0.08,r*0.39);
-ctx.lineTo(r*0.24,r*0.26);
-ctx.lineTo(r*0.33,r*0.37);
-ctx.lineTo(r*0.64,r*0.22);
-ctx.quadraticCurveTo(r*0.5,r*0.78,0,r*0.78);
-ctx.quadraticCurveTo(-r*0.5,r*0.78,-r*0.64,r*0.22);
+ctx.moveTo(-r*0.65,-r*0.18);
+ctx.lineTo(-r*0.14,r*0.04);
+ctx.lineTo(-r*0.52,r*0.14);
 ctx.closePath();ctx.fill();
 
-// عمق قهوه‌ای تیره پایین دهان برای حس سه‌بعدی
 ctx.fillStyle="#7c2d12";
 ctx.beginPath();
-ctx.moveTo(-r*0.54,r*0.46);
-ctx.quadraticCurveTo(0,r*0.58,r*0.54,r*0.46);
-ctx.quadraticCurveTo(r*0.38,r*0.76,0,r*0.76);
-ctx.quadraticCurveTo(-r*0.38,r*0.76,-r*0.54,r*0.46);
+ctx.moveTo(-r*0.61,-r*0.13);
+ctx.lineTo(-r*0.18,r*0.04);
+ctx.lineTo(-r*0.50,r*0.12);
+ctx.closePath();ctx.fill();
+
+// چشم راست تیز و اخم‌دار
+ctx.fillStyle="#9a3412";
+ctx.beginPath();
+ctx.moveTo(r*0.65,-r*0.18);
+ctx.lineTo(r*0.14,r*0.04);
+ctx.lineTo(r*0.52,r*0.14);
+ctx.closePath();ctx.fill();
+
+ctx.fillStyle="#7c2d12";
+ctx.beginPath();
+ctx.moveTo(r*0.61,-r*0.13);
+ctx.lineTo(r*0.18,r*0.04);
+ctx.lineTo(r*0.50,r*0.12);
+ctx.closePath();ctx.fill();
+
+// لبخند پهن و دندان‌دار دقیقاً مشابه عکس پروفایل
+ctx.fillStyle="#7c2d12";
+ctx.beginPath();
+ctx.moveTo(-r*0.66,r*0.14);
+ctx.lineTo(-r*0.36,r*0.34);
+ctx.lineTo(-r*0.26,r*0.20);
+ctx.lineTo(-r*0.12,r*0.35);
+ctx.lineTo(r*0.12,r*0.35);
+ctx.lineTo(r*0.26,r*0.20);
+ctx.lineTo(r*0.36,r*0.34);
+ctx.lineTo(r*0.66,r*0.14);
+ctx.quadraticCurveTo(r*0.52,r*0.76,0,r*0.76);
+ctx.quadraticCurveTo(-r*0.52,r*0.76,-r*0.66,r*0.14);
+ctx.closePath();ctx.fill();
+
+// عمق سایه داخل دهان
+ctx.fillStyle="#5a1d0c";
+ctx.beginPath();
+ctx.moveTo(-r*0.52,r*0.44);
+ctx.quadraticCurveTo(0,r*0.55,r*0.52,r*0.44);
+ctx.quadraticCurveTo(r*0.36,r*0.74,0,r*0.74);
+ctx.quadraticCurveTo(-r*0.36,r*0.74,-r*0.52,r*0.44);
 ctx.closePath();ctx.fill();
 
 ctx.restore();
-// خط دور ظریف تیره دور صورت
-ctx.strokeStyle="#451a03";ctx.lineWidth=2.5;
-ctx.beginPath();ctx.arc(x,y,r,0,6.28);ctx.stroke();
 }
 
 function loop(now){
