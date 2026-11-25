@@ -573,27 +573,33 @@ for(let i=0;i<numColors;i++)segs.push(PAL[i]);
 
 buildWheelCache();
 
-const totalKnives=Math.min(10,5+Math.floor(lvl*0.7));
+const totalKnives=Math.min(12,6+Math.floor(lvl*0.6));
 queue=[];
 for(let i=0;i<totalKnives;i++)queue.push(segs[Math.floor(Math.random()*segs.length)]);
 
-if(lvl>=3){
-const preCount=isBoss?2:1;
+// موانع چالش‌برانگیزتر با فاصله‌های تنگ‌تر در مراحل بالاتر
+const preCount=Math.min(7,1+Math.floor(lvl*0.75)+(isBoss?1:0));
+const minGap=lvl>=5?0.24:0.32;
+let cursor=0.45;
 for(let i=0;i<preCount;i++){
-const a=(Math.PI*2/preCount)*i+0.45;
+const step=minGap+Math.random()*(lvl>=4?0.45:0.85);
+const a=norm(cursor);
+cursor+=step;
+if(!stuck.some(k=>angDiff(k.a,a)<minGap*0.92)){
 stuck.push({a,c:"#cbd5e1",pre:true});
 }
 }
 
-rotSpd=1.8+Math.min(1.5,lvl*0.14);
+// سرعت چرخش ثابت و کنترل‌شده باقی می‌ماند
+rotSpd=1.85;
 
 const starA=1.25;
-if(!stuck.some(k=>angDiff(k.a,starA)<0.35)){
+if(!stuck.some(k=>angDiff(k.a,starA)<0.36)){
 pickups.push({a:starA,type:"star",hit:false});
 }
 if(lvl>=2){
-const aimA=starA+Math.PI;
-if(!stuck.some(k=>angDiff(k.a,aimA)<0.35)){
+const aimA=norm(starA+Math.PI);
+if(!stuck.some(k=>angDiff(k.a,aimA)<0.36)){
 pickups.push({a:aimA,type:"aim",hit:false});
 }
 }
@@ -755,36 +761,31 @@ c.fillStyle=gloss;
 c.beginPath();c.ellipse(0,-r*0.56,r*0.46,r*0.24,0,0,6.28);c.fill();
 
 c.fillStyle="#9a3412";
-c.beginPath();
-c.moveTo(-r*0.65,-r*0.18);
+c.beginPath();c.moveTo(-r*0.65,-r*0.18);
 c.lineTo(-r*0.14,r*0.04);
 c.lineTo(-r*0.52,r*0.14);
 c.closePath();c.fill();
 
 c.fillStyle="#7c2d12";
-c.beginPath();
-c.moveTo(-r*0.61,-r*0.13);
+c.beginPath();c.moveTo(-r*0.61,-r*0.13);
 c.lineTo(-r*0.18,r*0.04);
 c.lineTo(-r*0.50,r*0.12);
 c.closePath();c.fill();
 
 c.fillStyle="#9a3412";
-c.beginPath();
-c.moveTo(r*0.65,-r*0.18);
+c.beginPath();c.moveTo(r*0.65,-r*0.18);
 c.lineTo(r*0.14,r*0.04);
 c.lineTo(r*0.52,r*0.14);
 c.closePath();c.fill();
 
 c.fillStyle="#7c2d12";
-c.beginPath();
-c.moveTo(r*0.61,-r*0.13);
+c.beginPath();c.moveTo(r*0.61,-r*0.13);
 c.lineTo(r*0.18,r*0.04);
 c.lineTo(r*0.50,r*0.12);
 c.closePath();c.fill();
 
 c.fillStyle="#7c2d12";
-c.beginPath();
-c.moveTo(-r*0.66,r*0.14);
+c.beginPath();c.moveTo(-r*0.66,r*0.14);
 c.lineTo(-r*0.36,r*0.34);
 c.lineTo(-r*0.26,r*0.20);
 c.lineTo(-r*0.12,r*0.35);
@@ -797,8 +798,7 @@ c.quadraticCurveTo(-r*0.52,r*0.76,-r*0.66,r*0.14);
 c.closePath();c.fill();
 
 c.fillStyle="#5a1d0c";
-c.beginPath();
-c.moveTo(-r*0.52,r*0.44);
+c.beginPath();c.moveTo(-r*0.52,r*0.44);
 c.quadraticCurveTo(0,r*0.55,r*0.52,r*0.44);
 c.quadraticCurveTo(r*0.36,r*0.74,0,r*0.74);
 c.quadraticCurveTo(-r*0.36,r*0.74,-r*0.52,r*0.44);
